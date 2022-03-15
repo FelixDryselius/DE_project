@@ -1,0 +1,20 @@
+#cloud-config 
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+packages: 
+- openjdk-8-jdk
+- python3-pip
+
+runcmd:
+- for i in {1..255}; do echo "192.168.1.$i host-192-168-1-$i-de1" | sudo tee -a /etc/hosts; done
+- for i in {1..255}; do echo "192.168.2.$i host-192-168-2-$i-de1" | sudo tee -a /etc/hosts; done
+- sudo hostname host-$(hostname -I | awk '{$1=$1};1' | sed 's/\./-/'g)-de1 ; hostname
+- echo "export PYSPARK_PYTHON=python3" >> /home/ubuntu/.bashrc
+- source ~/.bashrc
+- sudo python3 -m pip install pyspark==3.2.0 --no-cache-dir
+- sudo python3 -m pip install pandas 
+- sudo python3 -m pip install matplotlib 
+- sudo python3 -m pip install jupyterlab
+- python3 -m jupyterlab

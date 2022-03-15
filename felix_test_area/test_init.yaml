@@ -1,0 +1,10 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+runcmd:
+  - touch /home/ubuntu/created_by_cloud_init.txt
+  - echo "export SPARK_HOME=/opt/spark" >> /home/ubuntu/.bashrc
+  - echo "export PATH=$PATH:/opt/spark/bin:/opt/spark/sbin" >> /home/ubuntu/.bashrc

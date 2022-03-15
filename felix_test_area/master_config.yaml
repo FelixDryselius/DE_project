@@ -1,0 +1,19 @@
+#cloud-config 
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+packages: 
+- openjdk-8-jdk
+
+runcmd: 
+- echo "export SPARK_HOME=/opt/spark" >> /home/ubuntu/.bashrc
+- echo "export PATH=$PATH:/opt/spark/bin:/opt/spark/sbin" >> /home/ubuntu/.bashrc
+- sudo curl -O https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz > /home/ubuntu/spark-3.2.1-bin-hadoop3.2.tgz
+- sudo tar xvf /home/ubuntu/spark-3.2.1-bin-hadoop3.2.tgz
+- sudo rm /home/ubuntu/spark-3.2.1-bin-hadoop3.2.tgz
+- sudo mv /home/ubuntu/spark-3.2.1-bin-hadoop3.2/ /opt/spark
+- IP_PRIV=$(hostname -I)
+- sudo echo "SPARK_MASTER_HOST=$IP_PRIV" >> /opt/spark/conf/spark-env.sh
+- source /home/ubuntu/.bashrc
+- start-master.sh

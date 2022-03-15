@@ -1,0 +1,51 @@
+#cloud-config
+# 1. Create a new group
+groups:
+  - pf9testgroup
+# 2. Change default user add to new group and add sudo access
+system_info:
+  default_user:
+    name: default-user
+    lock_passwd: true
+    groups: pf9testgroup
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+# 3. Change password of default user
+password: groovy
+chpasswd: { expire: False }
+ssh_pwauth: True
+# 4. Create new user and also create the default user
+# 5. Add ssh-key
+# 6. Add password ("groovy")
+# 7. Add to group
+# 8. Add sudo access
+users:
+  - default
+  - name: new-user
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAGEArdM+gvsEq8BBvtTRHPa23mRsGSWDlWi9gvRSjhvcgYhsnssEy/QvSokqQgfJ7O8uEf3JEvDhGbX/G65YzLeyO4hS+R86vGAyyJuLXPuAyrWwccWdeOJeno26P5CutRVp test_key@platform9
+    lock_passwd: false
+    groups: pf9testgroup
+    passwd: $6$whatwhat1$mkCxCGXIEgF.6CjvGsdcoseQNFy/IvKS3dxz64uHxH7Y75KvJVMc96oEjhgd2ixrMpTwNjiWVG967009HqAyT1
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+# 9. File creation
+write_files:
+  - content: |
+      # This will go inside the file
+      OK Platform9, this is working.
+    path: /tmp/pf9_write_file.txt
+    permissions: '0777'
+# 10. Run arbitrary commands
+runcmd:
+  - [ 'sh', '-c', 'echo "Hello World from PF9" > /tmp/pf9_hello.txt']
+  - [ 'sh', '-c', 'date > /tmp/pf9_date.txt']
+# 11. Set hostname
+hostname: pf9-hostname
+# 12. Set timezone
+timezone: US/Eastern
+# 13. Install packages
+packages:
+  - git
+  - gdb
+# 14. Restart network service for Redhat guests (this will fail gracefully on Debian guests)
+bootcmd:
+  - [ 'sh', '-c', 'service network restart' ]
