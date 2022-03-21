@@ -1,0 +1,30 @@
+#cloud-config 
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+packages: 
+- openjdk-8-jdk
+- scala
+
+runcmd:
+  - echo "export SPARK_HOME=/usr/local/spark" >> /home/ubuntu/.bashrc
+  - echo "export PATH=$PATH:/usr/local/spark/bin:/usr/local/spark/sbin" >> /home/ubuntu/.bashrc
+  - cd /home/ubuntu && { curl -O https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz ; cd -; }
+  - cd /home/ubuntu && { tar xvf spark-3.2.1-bin-hadoop3.2.tgz; cd -; }
+  - mv /home/ubuntu/spark-3.2.1-bin-hadoop3.2 /usr/local/spark
+  - cp /usr/local/spark/conf/spark-env.sh.template /usr/local/spark/conf/spark-env.sh
+  - source /home/ubuntu/.bashrc
+  # Manually add this to /etc/hosts
+  #<MASTER-IP> master
+  #<WORKER01-IP> worker1
+  #<WORKER02-IP> worker2
+  
+  # Manually add/fix the following to /usr/local/spark/conf/spark-env.sh
+  #export SPARK_MASTER_HOST='<MASTER-IP>'
+  #export JAVA_HOME=<Path_of_JAVA_installation>
+
+  # Manually fix ssh keys to all other nodes
+
+
+

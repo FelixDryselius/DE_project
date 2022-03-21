@@ -1,0 +1,15 @@
+127.0.0.1 localhost
+192.168.2.5 master
+192.168.2.14 worker1
+192.168.2.219 driver
+192.168.2.53 database
+192.168.2.129 worker2
+
+
+# The following lines are desirable for IPv6 capable hosts
+::1 ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
