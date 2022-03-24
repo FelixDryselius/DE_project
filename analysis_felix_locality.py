@@ -5,20 +5,22 @@ import time
 from pyspark.sql import SparkSession
 start_time = time.time()
 
-table="jan_2014_small"
-
 spark = SparkSession.builder.appName("jan_small").master("spark://master:7077")\
     .config('spark.jars.packages', 'org.mongodb.spark:mongo-spark-connector_2.12:3.0.1')\
     .config("spark.executor.memory", "2560m")\
-    .config("spark.mongodb.input.uri", "mongodb://master/RedditComments."+table)\
-    .config("spark.mongodb.output.uri", "mongodb://master/RedditComments."+table)\
+    .config("spark.mongodb.input.database", "RedditComments")\
+    .config("spark.mongodb.input.collection", "jan_2010")\
+    .config("spark.mongodb.input.uri", "mongodb://192.168.2.14:27018, 192.168.2.129:27018/?readPreference=nearest")\
+    .config("spark.mongodb.input.localThreshold",10)\
+    .config("spark.mongodb.input.partitioner" ,"MongoShardedPartitioner") \
+    .config("spark.mongodb.input.partitionerOptions.shardkey", "created_utc") \
     .getOrCreate()
 
 sc = spark.sparkContext
 
 sc.setLogLevel("ERROR")
 
-
+#.option("query", "SELECT * FROM body")
 df = spark.read.format("mongo").option("query", "SELECT * FROM body").load()
 #df.show()
 
