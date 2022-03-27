@@ -8,13 +8,21 @@ packages:
 - scala
 
 runcmd:
-  - echo "export SPARK_HOME=/usr/local/spark" >> /home/ubuntu/.bashrc
-  - echo "export PATH=$PATH:/usr/local/spark/bin:/usr/local/spark/sbin" >> /home/ubuntu/.bashrc
-  - cd /home/ubuntu && { curl -O https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz ; cd -; }
-  - cd /home/ubuntu && { tar xvf spark-3.2.1-bin-hadoop3.2.tgz; cd -; }
-  - mv /home/ubuntu/spark-3.2.1-bin-hadoop3.2 /usr/local/spark
-  - cp /usr/local/spark/conf/spark-env.sh.template /usr/local/spark/conf/spark-env.sh
-  - source /home/ubuntu/.bashrc
+- echo "export SPARK_HOME=/usr/local/spark" >> /home/ubuntu/.bashrc
+- echo "export PATH=$PATH:/usr/local/spark/bin:/usr/local/spark/sbin" >> /home/ubuntu/.bashrc
+- cd /home/ubuntu && { curl -O https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz ; cd -; }
+- cd /home/ubuntu && { tar xvf spark-3.2.1-bin-hadoop3.2.tgz; cd -; }
+- mv /home/ubuntu/spark-3.2.1-bin-hadoop3.2 /usr/local/spark
+- cp /usr/local/spark/conf/spark-env.sh.template /usr/local/spark/conf/spark-env.sh
+- source /home/ubuntu/.bashrc
+- apt-get install gnupg
+- wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
+- echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+- apt-get update
+- apt-get install -y mongodb-org
+
+
+ # NEED to change the /etc/mongod.conf file too  
   # Manually add this to /etc/hosts
   #<MASTER-IP> master
   #<WORKER01-IP> worker1
@@ -23,6 +31,7 @@ runcmd:
   # Manually add/fix the following to /usr/local/spark/conf/spark-env.sh
   #export SPARK_MASTER_HOST='<MASTER-IP>'
   #export JAVA_HOME=<Path_of_JAVA_installation>
+  #other non-obligatory settings 
 
   # Manually fix ssh keys to all other nodes
 

@@ -1,5 +1,4 @@
 #cloud-config 
-# NOTE THIS DOES NOT WORK YET
 package_update: true
 package_upgrade: true
 package_reboot_if_required: true
@@ -12,10 +11,12 @@ packages:
 runcmd:
 - echo "export PYSPARK_PYTHON=python3" >> /home/ubuntu/.bashrc
 - python3 -m pip install pyspark==3.2.1 --no-cache-dir
-- python3 -m pip install pandas 
 - echo "export PATH=$PATH:/home/ubuntu/.local/bin" >> /home/ubuntu/.bashrc
 - source /home/ubuntu/.bashrc
 - echo "SPARK_HOME=/home/ubuntu/.local/lib/python3.8/site-packages/pyspark" >> /home/ubuntu/.bashrc
-- python3 -m pip install matplotlib 
-- python3 -m pip install jupyterlab
-#- python3 -m jupyterlab
+- apt-get install gnupg
+- wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
+- echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+- apt-get update
+- apt-get install -y mongodb-org
+
